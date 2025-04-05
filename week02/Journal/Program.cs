@@ -70,6 +70,7 @@ class Program
                     break;
 
                 case "7":
+
                 case "Edit Entry":
                     journal.EditEntry();
                     break;
