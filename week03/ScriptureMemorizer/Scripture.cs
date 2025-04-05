@@ -2,51 +2,63 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-public class Scripture
+namespace ScriptureMemorization
 {
-    private Reference _reference;
-    private List<Word> _words;
-    // Use a static Random instance to avoid reinitializing on every call.
-    private static Random _rand = new Random();
-
-    public Scripture(Reference reference, string text)
+    public class Scripture
     {
-        _reference = reference;
-        // Split the scripture text by space and create a Word object for each word.
-        _words = text.Split(' ')
-                     .Select(word => new Word(word))
-                     .ToList();
-    }
+        public Reference Reference { get; set; }
+        public List<Word> Words { get; set; }
 
-    public void Display()
-    {
-        Console.Clear();
-        Console.WriteLine(_reference.ToString());
-        Console.WriteLine();
-        Console.WriteLine(GetRenderedText());
-    }
-
-    public void HideRandomWords(int count = 3)
-    {
-        // Get a list of words that are not yet hidden.
-        var visibleWords = _words.Where(w => !w.IsHidden).ToList();
-
-        // Hide up to 'count' random words.
-        for (int i = 0; i < count && visibleWords.Count > 0; i++)
+        public Scripture(Reference reference, string text)
         {
-            int index = _rand.Next(visibleWords.Count);
-            visibleWords[index].Hide();
-            visibleWords.RemoveAt(index);
+            Reference = reference;
+            Words = text.Split(' ').Select(word => new Word(word)).ToList();
         }
-    }
 
-    public bool AllWordsHidden()
-    {
-        return _words.All(w => w.IsHidden);
-    }
+        public void DisplayFullScripture()
+        {
+            Console.Clear();
+            Console.WriteLine($"{Reference}");
+            foreach (var word in Words)
+            {
+                Console.Write(word.Text + " ");
+            }
+            Console.WriteLine();
+        }
 
-    private string GetRenderedText()
-    {
-        return string.Join(" ", _words.Select(w => w.GetDisplayText()));
+        public void DisplayScripture()
+        {
+            Console.Clear();
+            Console.WriteLine($"{Reference}");
+            foreach (var word in Words)
+            {
+                if (word.IsHidden)
+                {
+                    Console.Write(new string('_', word.Text.Length) + " ");
+                }
+                else
+                {
+                    Console.Write(word.Text + " ");
+                }
+            }
+            Console.WriteLine();
+        }
+
+        public void HideRandomWords()
+        {
+            var random = new Random();
+            var visibleWords = Words.Where(w => !w.IsHidden).ToList();
+
+            if (visibleWords.Count > 0)
+            {
+                var randomIndex = random.Next(visibleWords.Count);
+                visibleWords[randomIndex].IsHidden = true;
+            }
+        }
+
+        public bool AllWordsHidden()
+        {
+            return Words.All(w => w.IsHidden);
+        }
     }
 }

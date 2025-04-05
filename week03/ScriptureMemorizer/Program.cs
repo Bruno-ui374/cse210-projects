@@ -1,90 +1,69 @@
 using System;
-using System.Diagnostics;
 using System.Collections.Generic;
+using System.Diagnostics;
 
-class Program
+namespace ScriptureMemorization
 {
-    static void Main(string[] args)
+    class Program
     {
-       
-        ScriptureLibrary library = new ScriptureLibrary();
-
-        
-        while (true)
+        static void Main(string[] args)
         {
-            List<Scripture> scriptures = library.GetRandomScriptures();
+            var scriptureLibrary = new ScriptureLibrary();
+            var randomScriptures = scriptureLibrary.GetRandomScriptures();
+            var timer = new Stopwatch();
 
-     
-            if (scriptures.Count == 0)
-            {
-                Console.WriteLine("\nYou have completed your scripture memorizing for the day!");
-                break;
-            }
-
-       
-            Scripture scripture = scriptures[new Random().Next(scriptures.Count)];
-
-            if (scripture == null)
-            {
-                Console.WriteLine("No scriptures available.");
-                return;
-            }
-
-        
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-           
-            scripture.Display();
-            Console.WriteLine("\nPress Enter to begin memorizing or type 'quit' to finish.");
-            string input = Console.ReadLine().Trim().ToLower();
-
-            if (input == "quit")
-            {
-                stopwatch.Stop();
-                Console.WriteLine($"\nTime elapsed: {stopwatch.Elapsed}");
-                break;
-            }
-
-            
             while (true)
             {
-                scripture.HideRandomWords();
-                scripture.Display();
-
-                if (scripture.AllWordsHidden())
+                if (randomScriptures.Count == 0)
                 {
-                    stopwatch.Stop();
-                    Console.WriteLine("\nAll words are now hidden.");
-                    Console.WriteLine($"Time elapsed: {stopwatch.Elapsed}");
+                    Console.WriteLine("You have completed your scripture memorizing for the day!");
                     break;
                 }
 
-                Console.WriteLine("\nPress Enter to hide more words or type 'quit' to finish.");
-                input = Console.ReadLine().Trim().ToLower();
-                if (input == "quit")
+                var scripture = randomScriptures[0];
+                randomScriptures.RemoveAt(0);
+
+                scripture.DisplayFullScripture();
+                timer.Start();
+
+                Console.WriteLine("\nPress Enter to continue or type 'quit' to finish.");
+
+                while (true)
                 {
-                    stopwatch.Stop();
-                    Console.WriteLine($"\nTime elapsed: {stopwatch.Elapsed}");
-                    return;
+                    var input = Console.ReadLine();
+
+                    if (input.ToLower() == "quit")
+                    {
+                        Console.WriteLine("Thank you for memorizing! Exiting...");
+                        return;
+                    }
+
+                    if (string.IsNullOrEmpty(input))
+                    {
+                        scripture.HideRandomWords();
+                        scripture.DisplayScripture();
+
+                        if (scripture.AllWordsHidden())
+                        {
+                            timer.Stop();
+                            Console.WriteLine($"Time taken: {timer.Elapsed.TotalSeconds} seconds");
+                            timer.Reset();
+
+                            Console.WriteLine("Do you want to memorize another scripture? Press '2' to continue, or just press Enter to finish.");
+                            var nextAction = Console.ReadLine();
+
+                            if (nextAction == "2")
+                            {
+                                break;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Thanks for memorizing today! Goodbye.");
+                                return;
+                            }
+                        }
+                    }
                 }
-            }
-
-         
-            library.MarkAsUsed(scripture);
-
-            Console.WriteLine("\nDo you want to memorize another scripture?");
-            Console.WriteLine("Press '2' to load another scripture from the list, or just press Enter to finish.");
-            input = Console.ReadLine().Trim();
-            if (input == "2")
-            {
-                
-                continue;
-            }
-            else
-            {
-                
-                break;
             }
         }
     }
