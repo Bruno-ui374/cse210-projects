@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 namespace ScriptureMemorization
 {
@@ -8,62 +7,28 @@ namespace ScriptureMemorization
     {
         static void Main(string[] args)
         {
-            var scriptureLibrary = new ScriptureLibrary();
-            var randomScriptures = scriptureLibrary.GetRandomScriptures();
-            var timer = new Stopwatch();
-
+            ScriptureLibrary library = new ScriptureLibrary();
             while (true)
             {
-                if (randomScriptures.Count == 0)
-                {
-                    Console.WriteLine("You have completed your scripture memorizing for the day!");
-                    break;
-                }
-
-                var scripture = randomScriptures[0];
-                randomScriptures.RemoveAt(0);
-
+                Scripture scripture = library.GetRandomScripture();
                 scripture.DisplayFullScripture();
-                timer.Start();
-
-                Console.WriteLine("\nPress Enter to continue or type 'quit' to finish.");
-
-                while (true)
+                Console.WriteLine("\nPress Enter to hide the next word or type 'quit' to finish.");
+                while (!scripture.AllWordsHidden())
                 {
-                    var input = Console.ReadLine();
-
+                    string input = Console.ReadLine();
                     if (input.ToLower() == "quit")
-                    {
-                        Console.WriteLine("Thank you for memorizing! Exiting...");
                         return;
-                    }
-
-                    if (string.IsNullOrEmpty(input))
-                    {
-                        scripture.HideRandomWords();
-                        scripture.DisplayScripture();
-
-                        if (scripture.AllWordsHidden())
-                        {
-                            timer.Stop();
-                            Console.WriteLine($"Time taken: {timer.Elapsed.TotalSeconds} seconds");
-                            timer.Reset();
-
-                            Console.WriteLine("Do you want to memorize another scripture? Press '2' to continue, or just press Enter to finish.");
-                            var nextAction = Console.ReadLine();
-
-                            if (nextAction == "2")
-                            {
-                                break;
-                            }
-                            else
-                            {
-                                Console.WriteLine("Thanks for memorizing today! Goodbye.");
-                                return;
-                            }
-                        }
-                    }
+                    scripture.HideRandomWord();
+                    scripture.DisplayScripture();
+                    if (!scripture.AllWordsHidden())
+                        Console.WriteLine("Press Enter to hide the next word or type 'quit' to finish.");
+                    else
+                        Console.WriteLine("All words hidden.");
                 }
+                Console.WriteLine("Do you want to memorize another scripture? Press '2' to continue, or just press Enter to finish.");
+                string answer = Console.ReadLine();
+                if (answer != "2")
+                    break;
             }
         }
     }
