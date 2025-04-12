@@ -23,7 +23,7 @@ namespace OnlineShopping
             return _address;
         }
 
-        // Delegates the check to the address.
+        
         public bool LivesInUSA()
         {
             return _address.InUSA();

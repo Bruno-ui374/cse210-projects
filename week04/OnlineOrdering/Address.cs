@@ -17,13 +17,12 @@ namespace OnlineShopping
             _country = country;
         }
 
-        // Determines if the address is in the USA.
+        
         public bool InUSA()
         {
             return _country.ToUpper() == "USA";
         }
 
-        // Returns the full address as a formatted string.
         public string GetFullAddress()
         {
             return _street + "\n" + _city + ", " + _state + "\n" + _country;

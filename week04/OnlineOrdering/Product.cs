@@ -17,7 +17,7 @@ namespace OnlineShopping
             _quantity = quantity;
         }
 
-        // Computes the total cost of this product.
+        
         public decimal GetTotalCost()
         {
             return _price * _quantity;
