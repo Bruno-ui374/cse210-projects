@@ -9,7 +9,7 @@ namespace ExerciseTracker
         public RunningActivity(DateTime date, double duration, double distance)
             : base(date, duration)
         {
-            _distance = distance;
+            _distance = distance; //distance
         }
 
         public override double GetDistance() => _distance;

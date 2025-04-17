@@ -4,7 +4,7 @@ namespace ExerciseTracker
 {
     public class Cycling : Activity
     {
-        private readonly double _speed; // mph
+        private readonly double _speed; //  mph
 
         public Cycling(DateTime date, double duration, double speed)
             : base(date, duration)

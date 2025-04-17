@@ -18,7 +18,7 @@ namespace ExerciseTracker
 
         public abstract double GetDistance(); // miles
         public abstract double GetSpeed();    // mph
-        public abstract double GetPace();     // min per mile
+        public abstract double GetPace();     // mins per mile
         public abstract string GetActivityType();
 
         public virtual string GetSummary()
